@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Docker Microservices Template</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 800px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+
+        .status {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .status-item {
+            flex: 1;
+            min-width: 150px;
+            padding: 15px;
+            background: #f7fafc;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .status-item.success {
+            border-left-color: #48bb78;
+        }
+
+        .status-item.loading {
+            border-left-color: #ed8936;
+        }
+
+        .status-label {
+            font-size: 0.85rem;
+            color: #718096;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+        }
+
+        .status-value {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .demo-section {
+            margin-top: 30px;
+        }
+
+        .demo-section h2 {
+            color: #2d3748;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button {
+            padding: 12px 24px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background: #5568d3;
+        }
+
+        button:disabled {
+            background: #cbd5e0;
+            cursor: not-allowed;
+        }
+
+        .items-list {
+            margin-top: 20px;
+        }
+
+        .item {
+            padding: 15px;
+            background: #f7fafc;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            border-left: 3px solid #667eea;
+        }
+
+        .item-name {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 5px;
+        }
+
+        .item-description {
+            color: #718096;
+            font-size: 0.95rem;
+        }
+
+        .item-id {
+            font-size: 0.85rem;
+            color: #a0aec0;
+            margin-top: 5px;
+        }
+
+        .error {
+            padding: 15px;
+            background: #fff5f5;
+            border-left: 4px solid #f56565;
+            border-radius: 6px;
+            color: #c53030;
+            margin-top: 15px;
+        }
+
+        .code {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 0.9rem;
+            margin-top: 20px;
+        }
+
+        .endpoints {
+            margin-top: 20px;
+        }
+
+        .endpoint {
+            background: #f7fafc;
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+
+        .method {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            margin-right: 10px;
+        }
+
+        .method.get {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+
+        .method.post {
+            background: #bee3f8;
+            color: #2c5282;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Docker Microservices Template</h1>
+        <p class="subtitle">Production-ready containerized architecture demo</p>
+
+        <div class="status">
+            <div class="status-item" id="frontend-status">
+                <div class="status-label">Frontend</div>
+                <div class="status-value">✓ Running</div>
+            </div>
+            <div class="status-item loading" id="api-status">
+                <div class="status-label">API</div>
+                <div class="status-value">Checking...</div>
+            </div>
+            <div class="status-item loading" id="db-status">
+                <div class="status-label">Database</div>
+                <div class="status-value">Checking...</div>
+            </div>
+        </div>
+
+        <div class="demo-section">
+            <h2>API Demo</h2>
+            <div class="input-group">
+                <input type="text" id="item-name" placeholder="Item name" value="Example Item">
+                <input type="text" id="item-desc" placeholder="Description" value="This is a test item">
+                <button onclick="createItem()">Create Item</button>
+            </div>
+            <button onclick="fetchItems()">Fetch All Items</button>
+
+            <div class="items-list" id="items-list"></div>
+        </div>
+
+        <div class="endpoints">
+            <h2>Available Endpoints</h2>
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <span>/api/health - Health check</span>
+            </div>
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <span>/api/items - List all items</span>
+            </div>
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <span>/api/items/{id} - Get specific item</span>
+            </div>
+            <div class="endpoint">
+                <span class="method post">POST</span>
+                <span>/api/items - Create new item</span>
+            </div>
+            <div class="endpoint">
+                <span class="method get">GET</span>
+                <span>/api/docs - Interactive API documentation</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Check API health
+        async function checkHealth() {
+            try {
+                const response = await fetch('/api/health');
+                const data = await response.json();
+
+                const apiStatus = document.getElementById('api-status');
+                apiStatus.classList.remove('loading');
+                apiStatus.classList.add('success');
+                apiStatus.querySelector('.status-value').textContent = '✓ Running';
+
+                if (data.database === 'connected') {
+                    const dbStatus = document.getElementById('db-status');
+                    dbStatus.classList.remove('loading');
+                    dbStatus.classList.add('success');
+                    dbStatus.querySelector('.status-value').textContent = '✓ Connected';
+                }
+            } catch (error) {
+                console.error('Health check failed:', error);
+                const apiStatus = document.getElementById('api-status');
+                apiStatus.querySelector('.status-value').textContent = '✗ Error';
+            }
+        }
+
+        // Fetch items from API
+        async function fetchItems() {
+            const listEl = document.getElementById('items-list');
+            listEl.innerHTML = '<p>Loading...</p>';
+
+            try {
+                const response = await fetch('/api/items');
+                const items = await response.json();
+
+                if (items.length === 0) {
+                    listEl.innerHTML = '<p style="color: #718096; padding: 15px;">No items yet. Create one above!</p>';
+                    return;
+                }
+
+                listEl.innerHTML = items.map(item => `
+                    <div class="item">
+                        <div class="item-name">${item.name}</div>
+                        <div class="item-description">${item.description || 'No description'}</div>
+                        <div class="item-id">ID: ${item.id} | Created: ${new Date(item.created_at).toLocaleString()}</div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                listEl.innerHTML = `<div class="error">Failed to fetch items: ${error.message}</div>`;
+            }
+        }
+
+        // Create new item
+        async function createItem() {
+            const name = document.getElementById('item-name').value;
+            const description = document.getElementById('item-desc').value;
+
+            if (!name) {
+                alert('Please enter an item name');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/items', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ name, description })
+                });
+
+                if (response.ok) {
+                    document.getElementById('item-name').value = '';
+                    document.getElementById('item-desc').value = '';
+                    fetchItems();
+                } else {
+                    const error = await response.json();
+                    alert('Failed to create item: ' + (error.detail || 'Unknown error'));
+                }
+            } catch (error) {
+                alert('Failed to create item: ' + error.message);
+            }
+        }
+
+        // Initialize
+        checkHealth();
+        fetchItems();
+    </script>
+</body>
+</html>
