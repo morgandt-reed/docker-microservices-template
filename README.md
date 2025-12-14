@@ -1,6 +1,32 @@
 # Docker Microservices Template
 
+[![CI](https://github.com/morgandt-reed/docker-microservices-template/actions/workflows/ci.yml/badge.svg)](https://github.com/morgandt-reed/docker-microservices-template/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Docker](https://img.shields.io/badge/Docker-Ready-blue?logo=docker)](https://www.docker.com/)
+
 Production-ready microservices architecture demonstrating Docker best practices for enterprise deployments.
+
+## Demo
+
+<p align="center">
+  <img src="docs/screenshots/app-running.png" alt="Application Running" width="800">
+  <br>
+  <em>3-tier application with Nginx, FastAPI, and PostgreSQL</em>
+</p>
+
+<details>
+<summary>View more screenshots</summary>
+
+### Grafana Dashboard
+<img src="docs/screenshots/grafana-dashboard.png" alt="Grafana Dashboard" width="800">
+
+### API Documentation
+<img src="docs/screenshots/api-docs.png" alt="API Documentation" width="800">
+
+### Docker Containers
+<img src="docs/screenshots/docker-ps.png" alt="Docker Containers" width="800">
+
+</details>
 
 ## Architecture
 
